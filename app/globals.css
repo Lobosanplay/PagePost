@@ -54,3 +54,11 @@ body {
   padding-top: 15px;
   border-top: 1px dashed #ccc;
 }
+
+.login-container {
+  border:white solid 1px;
+  display: grid;
+  justify-items: center;
+  align-content: space-evenly;
+  height: 100%;
+}
