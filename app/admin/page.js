@@ -4,6 +4,7 @@ import { supabase } from '../../lib/supabaseClient'
 import { useRouter } from 'next/navigation'
 
 export default function AdminPanel() {
+  const [loading, setLoading] = useState(false);
   const [posts, setPosts] = useState([])
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -31,35 +32,55 @@ export default function AdminPanel() {
   }
 
   async function createPost() {
-    let imageUrl = null
+  try {
+    setLoading(true);
     
+    // 1. Verificar autenticación
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) throw new Error('Authentication required');
+
+    // 2. Subir imagen si existe
+    let imageUrl = null;
     if (image) {
-      const fileName = `posts/${Date.now()}-${image.name}`
+      const fileName = `posts/${user.id}/${Date.now()}-${image.name.replace(/\s+/g, '_')}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('post-images')
-        .upload(fileName, image)
+        .upload(fileName, image, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: image.type
+        });
       
-      if (!uploadError) {
-        imageUrl = supabase.storage.from('post-images').getPublicUrl(uploadData.path).data.publicUrl
-      }
+      if (uploadError) throw uploadError;
+      imageUrl = supabase.storage.from('post-images').getPublicUrl(uploadData.path).data.publicUrl;
     }
 
+    // 3. Crear post
     const { error } = await supabase
       .from('posts')
       .insert([{ 
         title, 
         content, 
         image_url: imageUrl,
-        created_by: (await supabase.auth.getUser()).data.user.id
-      }])
+        created_by: user.id
+      }]);
     
-    if (!error) {
-      setTitle('')
-      setContent('')
-      setImage(null)
-      fetchPosts()
-    }
+    if (error) throw error;
+
+    // 4. Limpiar formulario y refrescar
+    setTitle('');
+    setContent('');
+    setImage(null);
+    await fetchPosts();
+    
+  } catch (error) {
+    console.error('Error creating post:', error);
+    alert(error.message);
+  } finally {
+    setLoading(false);
   }
+}
+
 
   async function shareWithGuest(postId) {
 
