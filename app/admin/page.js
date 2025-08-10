@@ -186,10 +186,18 @@ export default function AdminPanel() {
                 )}
                 
                 {/* Contenido del post */}
-                <div className="p-4">
+                <div className="relative p-4">
                   <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">{post.title}</h3>
                   <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{post.content}</p>
                   
+                    <button type="button" className='absolute top-1 right-0 p-2 text-white rounded-md text-red-700 border border-red hover:bg-red-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex intems-center me-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:focus:ring-red-800 dark:hover:bg-red-500'>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="Red" strokeWidth="2"/>
+                        <path d="M8 8L16 16" stroke="Red" strokeWidth="2" strokeLinecap="round"/>
+                        <path d="M16 8L8 16" stroke="Red" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span className="sr-only">Icon description</span>
+                  </button>
                   {/* Sección para compartir */}
                   <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
                     <label htmlFor={`guest-email-${post.id}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Compartir con invitado</label>
