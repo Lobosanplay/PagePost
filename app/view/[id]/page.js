@@ -13,7 +13,6 @@ export default function PostView() {
   }, [id])
 
   async function checkGuestAccess() {
-    // Verifica si el post es público o si el usuario tiene acceso
     const { data, error } = await supabase
       .from('posts')
       .select('*')
@@ -21,22 +20,9 @@ export default function PostView() {
       .single()
     
     if (data) {
-      // Opción 1: Posts completamente públicos
       setPost(data)
       setValidGuest(true)
       
-      // Opción 2: Validar email del invitado (requiere implementación adicional)
-      // const guestEmail = localStorage.getItem('guestEmail')
-      // const { data: access } = await supabase
-      //   .from('guest_access')
-      //   .select('*')
-      //   .eq('post_id', id)
-      //   .eq('guest_email', guestEmail)
-      
-      // if (access) {
-      //   setPost(data)
-      //   setValidGuest(true)
-      // }
     }
   }
 
@@ -44,16 +30,26 @@ export default function PostView() {
   if (!post) return <div>Cargando...</div>
 
   return (
-    <div className="post-view">
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-      {post.image_url && (
-        <img 
-          src={post.image_url} 
-          alt={post.title} 
-          style={{ maxWidth: '100%' }}
-        />
-      )}
+    <div className="min-h-screen py-8 px-4 bg-white dark:bg-gray-900 ">
+      <div className="bg-white dark:bg-gray-800 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 rounded-lg border border-white dark:border-gray-600 shadow-lg overflow-hidden">
+        {/* Contenido del post */}
+        <div className="p-6 font-light text-gray-500 sm:text-lg dark:text-gray-400">
+          <h1 className="mb-4 text-3xl md:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+            {post.title}
+          </h1>
+          <p className="mb-4">{post.content}</p>
+        </div>
+        
+        {/* Contenedor de la imagen */}
+        <div className="relative lg:flex lg:justify-end">
+          <img 
+            src={post.image_url} 
+            alt={post.title} 
+            className="w-full h-auto lg:w-auto lg:h-full max-h-96 object-cover lg:object-contain lg:max-w-full m-3"
+            style={{ marginLeft: 'auto' }}
+          />
+        </div>
+      </div>
     </div>
   )
 }

@@ -106,13 +106,13 @@ export default function AdminPanel() {
 
     const { error } = await supabase
       .from('guest_access')
-      .insert([{ post_id: postId, guest_email: guestEmail }])
+      .insert([{ post_id: postId, guest_email: guestEmails }])
     
     if (!error) {
       // Envía el enlace por email (implementación opcional)
       const postLink = `${window.location.origin}/view/${postId}`
       alert(`Comparte este enlace con tu invitado: ${postLink}`)
-      setGuestEmail('')
+      setGuestEmails('')
     }
   }
 
