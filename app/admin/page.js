@@ -9,9 +9,16 @@ export default function AdminPanel() {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState(null)
-  const [guestEmail, setGuestEmail] = useState('')
+  const [guestEmails, setGuestEmails] = useState({});
   const [isDeleting, setIsDeleting] = useState(null);
   const router = useRouter()
+
+  const handleGuestEmailChange = (postId, email) => {
+    setGuestEmails(prev => ({
+      ...prev,
+      [postId]: email
+    }));
+  };
 
   useEffect(() => {
     checkUser()
@@ -84,6 +91,8 @@ export default function AdminPanel() {
 
 
   async function shareWithGuest(postId) {
+    const email = guestEmails[postId] || '';
+
 
     const { data: post, error: postError } = await supabase
     .from('posts')
@@ -224,8 +233,8 @@ export default function AdminPanel() {
                       <input
                         id={`guest-email-${post.id}`}
                         type="email"
-                        value={guestEmail}
-                        onChange={(e) => setGuestEmail(e.target.value)}
+                        value={guestEmails[post.id] || ''}
+                        onChange={(e) => handleGuestEmailChange(post.id, e.target.value)}
                         placeholder="email@invitado.com"
                         className="flex-1 px-1 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
                       />
