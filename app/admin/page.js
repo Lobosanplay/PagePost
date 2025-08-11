@@ -40,54 +40,54 @@ export default function AdminPanel() {
   }
 
   async function createPost() {
-  try {
-    setLoading(true);
-    
-    // 1. Verificar autenticación
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) throw new Error('Authentication required');
-
-    // 2. Subir imagen si existe
-    let imageUrl = null;
-    if (image) {
-      const fileName = `posts/${user.id}/${Date.now()}-${image.name.replace(/\s+/g, '_')}`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('post-images')
-        .upload(fileName, image, {
-          cacheControl: '3600',
-          upsert: false,
-          contentType: image.type
-        });
+    try {
+      setLoading(true);
       
-      if (uploadError) throw uploadError;
-      imageUrl = supabase.storage.from('post-images').getPublicUrl(uploadData.path).data.publicUrl;
+      // 1. Verificar autenticación
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) throw new Error('Authentication required');
+
+      // 2. Subir imagen si existe
+      let imageUrl = null;
+      if (image) {
+        const fileName = `posts/${user.id}/${Date.now()}-${image.name.replace(/\s+/g, '_')}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('post-images')
+          .upload(fileName, image, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: image.type
+          });
+        
+        if (uploadError) throw uploadError;
+        imageUrl = supabase.storage.from('post-images').getPublicUrl(uploadData.path).data.publicUrl;
+      }
+
+      // 3. Crear post
+      const { error } = await supabase
+        .from('posts')
+        .insert([{ 
+          title, 
+          content, 
+          image_url: imageUrl,
+          created_by: user.id
+        }]);
+      
+      if (error) throw error;
+
+      // 4. Limpiar formulario y refrescar
+      setTitle('');
+      setContent('');
+      setImage(null);
+      await fetchPosts();
+      
+    } catch (error) {
+      console.error('Error creating post:', error);
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
-
-    // 3. Crear post
-    const { error } = await supabase
-      .from('posts')
-      .insert([{ 
-        title, 
-        content, 
-        image_url: imageUrl,
-        created_by: user.id
-      }]);
-    
-    if (error) throw error;
-
-    // 4. Limpiar formulario y refrescar
-    setTitle('');
-    setContent('');
-    setImage(null);
-    await fetchPosts();
-    
-  } catch (error) {
-    console.error('Error creating post:', error);
-    alert(error.message);
-  } finally {
-    setLoading(false);
   }
-}
 
 
   async function shareWithGuest(postId) {
@@ -117,25 +117,40 @@ export default function AdminPanel() {
   }
 
   async function deletePost(id) {
-  setIsDeleting(id);
-  try {
-    const { error } = await supabase
-      .from('posts')
-      .delete()
-      .eq('id', id);
-    
-    if (error) throw error;
-    
-    await fetchPosts();
-  } catch (error) {
-    alert('Error al eliminar: ' + error.message);
-  } finally {
-    setIsDeleting(null);
+    setIsDeleting(id);
+    try {
+      const { error } = await supabase
+        .from('posts')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+      
+      await fetchPosts();
+    } catch (error) {
+      alert('Error al eliminar: ' + error.message);
+    } finally {
+      setIsDeleting(null);
+    }
   }
-}
+
+  async function logout() {
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      alert(error.message)
+    }else {
+      router.push("/login")
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
+      <button className="flex items-center space-x-2" onClick={() => {logout()}}>
+        <svg className="w-6 h-6 text-red-800 dark:text-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
+          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"/>
+        </svg>
+      </button>
       <div className="max-w-4xl mx-auto">
         {/* Encabezado */}
         <div className="text-center mb-12">
