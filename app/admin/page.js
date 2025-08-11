@@ -190,7 +190,7 @@ export default function AdminPanel() {
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Tus Posts</h2>
           
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {posts.map(post => (
               <div key={post.id} className="bg-white dark:bg-gray-800 rounded-lg border border-white dark:border-gray-600 shadow-lg overflow-hidden">
                 {/* Imagen del post */}
@@ -220,14 +220,14 @@ export default function AdminPanel() {
                   {/* Sección para compartir */}
                   <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
                     <label htmlFor={`guest-email-${post.id}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Compartir con invitado</label>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-1">
                       <input
                         id={`guest-email-${post.id}`}
                         type="email"
                         value={guestEmail}
                         onChange={(e) => setGuestEmail(e.target.value)}
                         placeholder="email@invitado.com"
-                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
+                        className="flex-1 px-1 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white text-sm"
                       />
                       <button
                         onClick={() => shareWithGuest(post.id)}
