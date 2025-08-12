@@ -30,7 +30,7 @@ export default function PostView() {
   if (!post) return <div>Cargando...</div>
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-white dark:bg-gray-900 ">
+    <div className="min-h-dvh py-8 px-4 bg-white dark:bg-gray-900 ">
       <div className="bg-white dark:bg-gray-800 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 rounded-lg border border-white dark:border-gray-600 shadow-lg overflow-hidden">
         {/* Contenido del post */}
         <div className="p-6 font-light text-gray-500 sm:text-lg dark:text-gray-400">

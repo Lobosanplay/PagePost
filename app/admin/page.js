@@ -22,12 +22,15 @@ export default function AdminPanel() {
 
   useEffect(() => {
     checkUser()
-    fetchPosts()
+    if(checkUser) {
+      fetchPosts()
+    }
   }, [])
 
   async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) router.push('/login')
+    return true
   }
 
   async function fetchPosts() {
@@ -145,7 +148,7 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-8 px-4">
+    <div className="min-h-dvh bg-gray-100 dark:bg-gray-900 py-8 px-4">
       <button className="flex items-center space-x-2" onClick={() => {logout()}}>
         <svg className="w-6 h-6 text-red-800 dark:text-red" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
           <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3"/>
