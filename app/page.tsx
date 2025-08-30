@@ -7,7 +7,8 @@ export default function Home() {
   const router = useRouter()
   async function checkUser() {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) router.push('/login')
+    if (!user) router.push('/login'); 
+    else router.push('/admin')
   }
 
   useEffect(() => {

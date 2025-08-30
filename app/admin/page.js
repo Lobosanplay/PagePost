@@ -8,6 +8,8 @@ export default function AdminPanel() {
   const [posts, setPosts] = useState([])
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [entrydate, setEntryDate] = useState()
+  const [departuredate, setDepartureDate] = useState()
   const [image, setImage] = useState(null)
   const [guestEmails, setGuestEmails] = useState({});
   const [isDeleting, setIsDeleting] = useState(null);
@@ -178,9 +180,46 @@ export default function AdminPanel() {
             </div>
             
             <div>
+              <label htmlFor="Entry date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Entry date</label>
+              <input
+                id="Entry date"
+                type='date'
+                value={entrydate}
+                onChange={(e) => setEntryDate(e.target.value)}
+                placeholder="Fecha de llegada"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="departure date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">departure date</label>
+              <input
+                id="departure date"
+                type='date'
+                value={departuredate}
+                onChange={(e) => setDepartureDate(e.target.value)}
+                placeholder="Fecha de salida"
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+
+            <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contenido</label>
               <textarea
                 id="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Desarrolla tu contenido aquí"
+                rows={4}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="destination" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">destination</label>
+              <textarea
+                id="destination"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Desarrolla tu contenido aquí"
