@@ -8,8 +8,8 @@ export default function AdminPanel() {
   const [posts, setPosts] = useState([])
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
-  const [entrydate, setEntryDate] = useState()
-  const [departuredate, setDepartureDate] = useState()
+  const [entrydate, setEntryDate] = useState('')
+  const [departuredate, setDepartureDate] = useState('')
   const [destination, setDestination] = useState('')
   const [image, setImage] = useState(null)
   const [guestEmails, setGuestEmails] = useState({});
@@ -74,7 +74,10 @@ export default function AdminPanel() {
         .from('posts')
         .insert([{ 
           title, 
-          content, 
+          content,
+          arrival_date: entrydate,
+          departure_date: departuredate,
+          destination,
           image_url: imageUrl,
           created_by: user.id
         }]);
@@ -84,6 +87,9 @@ export default function AdminPanel() {
       // 4. Limpiar formulario y refrescar
       setTitle('');
       setContent('');
+      setEntryDate('');
+      setDepartureDate('');
+      setDestination('');
       setImage(null);
       await fetchPosts();
       
