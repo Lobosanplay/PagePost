@@ -36,15 +36,47 @@ export default function PostView() {
     }
   }
 
-  const formatDate = (dateString) => {
+  const formatDateUTC = (dateString) => {
     if (!dateString) return 'No especificada'
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+    
+    const date = new Date(dateString)
+    
+    // Obtener componentes en UTC
+    const year = date.getUTCFullYear()
+    const month = date.getUTCMonth() + 1 // Los meses van de 0 a 11
+    const day = date.getUTCDate()
+    const hours = date.getUTCHours()
+    const minutes = date.getUTCMinutes()
+    
+    // Formatear con ceros a la izquierda si es necesario
+    const formattedMonth = month < 10 ? `0${month}` : month
+    const formattedDay = day < 10 ? `0${day}` : day
+    const formattedHours = hours < 10 ? `0${hours}` : hours
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
+    
+    return `${formattedDay}/${formattedMonth}/${year} ${formattedHours}:${formattedMinutes} UTC`
+  }
+
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return 'No especificada'
+    
+    const date = new Date(dateString)
+    
+    // Obtener componentes en UTC
+    const year = date.getUTCFullYear()
+    const month = date.getUTCMonth() + 1
+    const day = date.getUTCDate()
+    const hours = date.getUTCHours()
+    const minutes = date.getUTCMinutes()
+    
+    // Formatear con ceros a la izquierda si es necesario
+    const formattedMonth = month < 10 ? `0${month}` : month
+    const formattedDay = day < 10 ? `0${day}` : day
+    const formattedHours = hours < 10 ? `0${hours}` : hours
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes
+    
+    // Formato más legible
+    return `${formattedDay}/${formattedMonth}/${year} a las ${formattedHours}:${formattedMinutes} UTC`
   }
 
   if (loading) {
@@ -96,7 +128,7 @@ export default function PostView() {
                     <div>
                       <span className="font-semibold">Llegada:</span>
                       <br />
-                      <span>{formatDate(post.arrival_date)}</span>
+                      <span>{formatDateUTC(post.arrival_date)}</span>
                     </div>
                     <div className="text-center">
                       <div className="w-6 h-0.5 bg-white mx-auto mb-1"></div>
@@ -105,7 +137,7 @@ export default function PostView() {
                     <div className="text-right">
                       <span className="font-semibold">Salida:</span>
                       <br />
-                      <span>{formatDate(post.departure_date)}</span>
+                      <span>{formatDateUTC(post.departure_date)}</span>
                     </div>
                   </div>
                 </div>
@@ -136,18 +168,18 @@ export default function PostView() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">
-                      Fecha de llegada
+                      Fecha de llegada (UTC)
                     </h3>
                     <p className="text-gray-900 dark:text-white font-medium">
-                      {formatDate(post.arrival_date)}
+                      {formatDateForDisplay(post.arrival_date)}
                     </p>
                   </div>
                   <div>
                     <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">
-                      Fecha de salida
+                      Fecha de salida (UTC)
                     </h3>
                     <p className="text-gray-900 dark:text-white font-medium">
-                      {formatDate(post.departure_date)}
+                      {formatDateForDisplay(post.departure_date)}
                     </p>
                   </div>
                 </div>
@@ -167,9 +199,9 @@ export default function PostView() {
               {/* Metadata adicional */}
               <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
                 <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>Publicado el {formatDate(post.created_at)}</span>
+                  <span>Publicado el {formatDateUTC(post.created_at)}</span>
                   {post.updated_at !== post.created_at && (
-                    <span>Actualizado el {formatDate(post.updated_at)}</span>
+                    <span>Actualizado el {formatDateUTC(post.updated_at)}</span>
                   )}
                 </div>
               </div>
