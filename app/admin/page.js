@@ -15,6 +15,7 @@ export default function AdminPanel() {
   const [guestEmails, setGuestEmails] = useState({});
   const [isDeleting, setIsDeleting] = useState(null);
   const [activeTab, setActiveTab] = useState('create'); // 'create' or 'list'
+  const [showNotification, setShowNotification] = useState(false);
   const router = useRouter()
 
   const handleGuestEmailChange = (postId, email) => {
@@ -125,7 +126,9 @@ export default function AdminPanel() {
     if (!error) {
       // Envía el enlace por email (implementación opcional)
       const postLink = `${window.location.origin}/view/${postId}`
-      alert(`Comparte este enlace con tu invitado: ${postLink}`)
+      navigator.clipboard.writeText(postLink)
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
       setGuestEmails('')
     }
   }
@@ -162,6 +165,22 @@ export default function AdminPanel() {
     <div className="min-h-dvh bg-gray-100 dark:bg-gray-900 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header con navegación y logout */}
+        {showNotification && (
+          <div className="transition-all px-6 py-3 rounded-xl shadow-xl font-semibold text-white text-center bg-gradient-to-r from-gray-800 to-gray-700"
+            style={{ 
+              position: 'fixed', 
+              top: '32px', 
+              left: '50%', 
+              transform: 'translate(-50%, 0%)', 
+              zIndex: 9999, 
+              pointerEvents: 'none', 
+              minWidth: '220px',
+              opacity: 1
+            }}
+          >
+            ✅ Link Copiado Exitosamente
+          </div>
+        )}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
           <div className="text-center sm:text-left">
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Panel de Administración</h1>
@@ -310,7 +329,7 @@ export default function AdminPanel() {
                 {posts.length} {posts.length === 1 ? 'post' : 'posts'}
               </span>
             </div>
-            
+
             {posts.length === 0 ? (
               <div className="bg-white dark:bg-gray-800 rounded-lg border border-white dark:border-gray-600 shadow-lg p-8 text-center">
                 <svg className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
